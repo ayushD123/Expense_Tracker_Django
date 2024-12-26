@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense</title>
+    {% include 'style.html' %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+</head>
+<body>
+    <h1>Expense Tracker</h1>
+    <div class="container">
+      <div class="header">
+        <img
+          src="https://i.ibb.co/jfScDTC/budget.png"
+          alt="Expense Tracker"
+        />
+        <div class="balance-container">
+          <h2>Your Balance</h2>
+          <h2 id="balance" class="balance">${{balance}}</h2>
+        </div>
+      </div>
+      <div class="inc-exp-container">
+        <div>
+          <h4>Income</h4>
+          <p id="money-plus" class="money plus">+${{income}}</p>
+        </div>
+        <div>
+          <h4>Expenses</h4>
+          <p id="money-minus" class="money minus">-${{expense}}</p>
+        </div>
+      </div>
+      <h3>History</h3>
+<ul id="list" class="list">
+  {% for t in transactions %}
+    <li class="{% if t.amount < 0 %}minus{% else %}plus{% endif %}">
+      {{ t.description }} <span>{{ t.amount }}</span>
+      <a href="{% url 'delete_transaction' t.uuid %}"  class="delete-btn" ><i class="fa fa-times"></i></a>
+    </li>
+  {% endfor %}
+</ul>
+      <h3>Add new transaction</h3>
+      <form id="form"  method="POST">
+        {% csrf_token %}
+        <div class="form-control">
+          <label for="text">Description</label>
+          <input type="text" name="description" id="text"  placeholder="Enter description..." />
+        </div>
+        <div class="form-control">
+          <label for="amount"
+            >Amount <br />
+            <small>(-100 = expense, 100 = income)</small></label
+          >
+          <input type="number" name="amount" id="amount"  placeholder="Enter amount..." />
+        </div>
+        <button type="submit" class="btn" id="transactionForm">Add transaction</button>
+      </form>
+     
+    </div>
+    <!-- Notification -->
+    <div class="notification-container" id="notification">
+      <p>Please add a description and amount</p>
+    </div>
+
+    {% if error_message %}
+    <script>
+        alert("{{ error_message }}");
+    </script>
+    {% endif %}
+    {% if success_message %}
+    <script>
+        alert("{{ success_message }}");
+    </script>
+    {% endif %}
+    
+</body>
+
+</html>
